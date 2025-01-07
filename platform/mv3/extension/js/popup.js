@@ -79,7 +79,7 @@ async function commitFilteringMode() {
             granted = await browser.permissions.request({
                 origins: [ `*://*.${targetHostname}/*` ],
             });
-        } catch(ex) {
+        } catch {
         }
         if ( granted !== true ) {
             setFilteringMode(beforeLevel);
@@ -287,7 +287,7 @@ dom.on('[data-i18n-title="popupTipReport"]', 'click', ev => {
     let url;
     try {
         url = new URL(currentTab.url);
-    } catch(_) {
+    } catch {
     }
     if ( url === undefined ) { return; }
     const reportURL = new URL(runtime.getURL('/report.html'));
@@ -325,7 +325,8 @@ async function init() {
             url = new URL(url.hash.slice(1));
         }
         tabURL.href = url.href || '';
-    } catch(ex) {
+    } catch {
+        return false;
     }
 
     if ( url !== undefined ) {
@@ -391,11 +392,13 @@ async function init() {
 }
 
 async function tryInit() {
+    let success = false;
     try {
-        await init();
-    } catch(ex) {
-        setTimeout(tryInit, 100);
+        success = await init();
+    } catch {
     }
+    if ( success ) { return; }
+    setTimeout(tryInit, 100);
 }
 
 tryInit();

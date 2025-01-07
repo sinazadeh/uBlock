@@ -70,10 +70,6 @@ const env = [
     'user_stylesheet',
 ];
 
-if ( platform !== 'firefox' ) {
-    env.push('native_css_has');
-}
-
 /******************************************************************************/
 
 const jsonSetMapReplacer = (k, v) => {
@@ -125,7 +121,7 @@ const fetchText = (url, cacheDir) => {
                     const content = data.join('');
                     try {
                         writeFile(`${cacheDir}/${fname}`, content);
-                    } catch (ex) {
+                    } catch {
                     }
                     resolve({ url, content });
                 });
@@ -303,6 +299,38 @@ const isURLSkip = rule =>
 
 /******************************************************************************/
 
+function patchRuleset(ruleset) {
+    if ( platform !== 'safari' ) { return ruleset; }
+    const out = [];
+    for ( const rule of ruleset ) {
+        const condition = rule.condition;
+        if ( rule.action.type === 'modifyHeaders' ) {
+            log(`Safari's incomplete API: ${JSON.stringify(rule)}`, true);
+            continue;
+        }
+        if ( Array.isArray(condition.requestMethods) ) {
+            log(`Safari's incomplete API: ${JSON.stringify(rule)}`, true);
+            continue;
+        }
+        if ( Array.isArray(condition.excludedRequestMethods) ) {
+            log(`Safari's incomplete API: ${JSON.stringify(rule)}`, true);
+            continue;
+        }
+        if ( Array.isArray(condition.initiatorDomains) ) {
+            condition.domains = condition.initiatorDomains;
+            delete condition.initiatorDomains;
+        }
+        if ( Array.isArray(condition.excludedInitiatorDomains) ) {
+            condition.excludedDomains = condition.excludedInitiatorDomains;
+            delete condition.excludedInitiatorDomains;
+        }
+        out.push(rule);
+    }
+    return out;
+}
+
+/******************************************************************************/
+
 // Two distinct hostnames:
 //   www.example.com
 //   example.com
@@ -473,7 +501,9 @@ async function processNetworkFilters(assetDetails, network) {
         }
     }
 
-    const plainGood = rules.filter(rule => isSafe(rule) && isRegex(rule) === false);
+    const plainGood = patchRuleset(
+        rules.filter(rule => isSafe(rule) && isRegex(rule) === false)
+    );
     log(`\tPlain good: ${plainGood.length}`);
     log(plainGood
         .filter(rule => Array.isArray(rule._warning))
@@ -481,12 +511,16 @@ async function processNetworkFilters(assetDetails, network) {
         .join('\n'), true
     );
 
-    const regexes = rules.filter(rule => isSafe(rule) && isRegex(rule));
+    const regexes = patchRuleset(
+        rules.filter(rule => isSafe(rule) && isRegex(rule))
+    );
     log(`\tMaybe good (regexes): ${regexes.length}`);
 
-    const redirects = rules.filter(rule =>
-        isUnsupported(rule) === false &&
-        isRedirect(rule)
+    const redirects = patchRuleset(
+        rules.filter(rule =>
+            isUnsupported(rule) === false &&
+            isRedirect(rule)
+        )
     );
     redirects.forEach(rule => {
         if ( rule.action.redirect.extensionPath === undefined ) { return; }
@@ -496,17 +530,23 @@ async function processNetworkFilters(assetDetails, network) {
     });
     log(`\tredirect=: ${redirects.length}`);
 
-    const removeparamsGood = rules.filter(rule =>
-        isUnsupported(rule) === false && isRemoveparam(rule)
+    const removeparamsGood = patchRuleset(
+        rules.filter(rule =>
+            isUnsupported(rule) === false && isRemoveparam(rule)
+        )
     );
-    const removeparamsBad = rules.filter(rule =>
-        isUnsupported(rule) && isRemoveparam(rule)
+    const removeparamsBad = patchRuleset(
+        rules.filter(rule =>
+            isUnsupported(rule) && isRemoveparam(rule)
+        )
     );
     log(`\tremoveparams= (accepted/discarded): ${removeparamsGood.length}/${removeparamsBad.length}`);
 
-    const modifyHeaders = rules.filter(rule =>
-        isUnsupported(rule) === false &&
-        isModifyHeaders(rule)
+    const modifyHeaders = patchRuleset(
+        rules.filter(rule =>
+            isUnsupported(rule) === false &&
+            isModifyHeaders(rule)
+        )
     );
     log(`\tmodifyHeaders=: ${modifyHeaders.length}`);
 

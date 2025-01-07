@@ -103,9 +103,12 @@ async function onFilteringModeChange(ev) {
 
     switch ( newLevel ) {
     case 1: { // Revoke broad permissions
-        await browser.permissions.remove({
-            origins: [ '<all_urls>' ]
-        });
+        try {
+            await browser.permissions.remove({ origins: [ '<all_urls>' ] });
+        } catch(reason) {
+            console.error(reason);
+            await sendMessage({ what: 'setDefaultFilteringMode', level: 1 });
+        }
         cachedRulesetData.defaultFilteringMode = 1;
         break;
     }
@@ -195,7 +198,7 @@ function getStagedTrustedSites() {
             return punycode.toASCII(
                 (new URL(`https://${hn}/`)).hostname
             );
-        } catch(_) {
+        } catch {
         }
         return '';
     }).filter(hn => hn !== '');
@@ -292,7 +295,7 @@ sendMessage({
         renderFilterLists(cachedRulesetData);
         renderWidgets();
         dom.cl.remove(dom.body, 'loading');
-    } catch(ex) {
+    } catch {
     }
     listen();
 }).catch(reason => {

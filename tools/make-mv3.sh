@@ -23,6 +23,9 @@ for i in "$@"; do
     chromium)
       PLATFORM="chromium"
       ;;
+    safari)
+      PLATFORM="safari"
+      ;;
     uBOLite_+([0-9]).+([0-9]).+([0-9]).+([0-9]))
       TAGNAME="$i"
       FULL="yes"
@@ -84,13 +87,13 @@ cp -R "$UBO_DIR/src/img/flags-of-the-world" "$DES"/img
 cp LICENSE.txt "$DES"/
 
 echo "*** uBOLite.mv3: Copying mv3-specific files"
-if [ "$PLATFORM" = "firefox" ]; then
-    cp platform/mv3/firefox/background.html "$DES"/
-fi
+cp platform/mv3/"$PLATFORM"/manifest.json "$DES"/
+cp platform/mv3/"$PLATFORM"/background.html "$DES"/ 2>/dev/null || :
 cp platform/mv3/extension/*.html "$DES"/
 cp platform/mv3/extension/*.json "$DES"/
 cp platform/mv3/extension/css/* "$DES"/css/
 cp -R platform/mv3/extension/js/* "$DES"/js/
+cp platform/mv3/"$PLATFORM"/ext-compat.js "$DES"/js/
 cp platform/mv3/extension/img/* "$DES"/img/
 cp -R platform/mv3/extension/_locales "$DES"/
 cp platform/mv3/README.md "$DES/"
@@ -99,11 +102,6 @@ if [ "$QUICK" != "yes" ]; then
     echo "*** uBOLite.mv3: Generating rulesets"
     TMPDIR=$(mktemp -d)
     mkdir -p "$TMPDIR"
-    if [ "$PLATFORM" = "chromium" ]; then
-        cp platform/mv3/chromium/manifest.json "$DES"/
-    elif [ "$PLATFORM" = "firefox" ]; then
-        cp platform/mv3/firefox/manifest.json "$DES"/
-    fi
     ./tools/make-nodejs.sh "$TMPDIR"
     cp platform/mv3/package.json "$TMPDIR"/
     cp platform/mv3/*.js "$TMPDIR"/
