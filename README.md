@@ -1,13 +1,13 @@
-[![Badge Commits]][Commit Rate]
-[![Badge Issues]][Issues]
-[![Badge Localization]][Crowdin]
-[![Badge License]][License]
-[![Badge NPM]][NPM]
-[![Badge Mozilla]][Mozilla]
-[![Badge Chrome]][Chrome]
-[![Badge Edge]][Edge]
+[Badge Commits][Commit Rate]
+[Badge Issues][Issues]
+[Badge Localization][Crowdin]
+[Badge License][License]
+[Badge NPM][NPM]
+[Badge Mozilla][Mozilla]
+[Badge Chrome][Chrome]
+[Badge Edge][Edge]
 
-***
+---
 
 <h1 align="center">
 <sub>
@@ -19,7 +19,7 @@ uBlock Origin (uBO)
 <sub><a href="https://github.com/gorhill/uBlock/wiki/uBlock-Origin-is-completely-unrelated-to-the-web-site-ublock.org"><b>BEWARE!</b> uBO is (and has always been) COMPLETELY UNRELATED to the website <code>ublock.org</code></a>.</sub>
 </p>
 
-***
+---
 
 <p align="center">
 <a href="https://addons.mozilla.org/addon/ublock-origin/"><img src="https://user-images.githubusercontent.com/585534/107280546-7b9b2a00-6a26-11eb-8f9f-f95932f4bfec.png" alt="Get uBlock Origin for Firefox"></a>
@@ -28,24 +28,24 @@ uBlock Origin (uBO)
 <a href="https://addons.thunderbird.net/thunderbird/addon/ublock-origin/"><img src="https://user-images.githubusercontent.com/124740436/235314672-73243149-3683-4407-a2d5-ad0f2b08bc17.png" alt="Get uBlock Origin for Thunderbird"></a>
 </p>
 
-***
+---
 
 <p align="center">
 <a href="https://chromewebstore.google.com/detail/ublock-origin/cjpalhdlnbpafiamejdnhcphjbkeiagm"><img src="https://user-images.githubusercontent.com/585534/107280622-91a8ea80-6a26-11eb-8d07-77c548b28665.png" alt="Get uBlock Origin for Chromium"></a><br>
 <sub><a href="https://github.com/uBlockOrigin/uBlock-issues/wiki/About-Google-Chrome's-%22This-extension-may-soon-no-longer-be-supported%22"><b>IMPORTANT</b>: About Google Chrome's "This extension may soon no longer be supported"</a></sub>
 </p>
 
-***
+---
 
 uBlock Origin (uBO) is a CPU and memory-efficient [wide-spectrum content blocker][Blocking] for Chromium and Firefox. It blocks ads, trackers, coin miners, popups, annoying anti-blockers, malware sites, etc., by default using [EasyList][EasyList], [EasyPrivacy][EasyPrivacy], [Peter Lowe's Blocklist][Peter Lowe's Blocklist], [Online Malicious URL Blocklist][Malicious Blocklist], and uBO [filter lists][uBO Filters]. There are many other lists available to block even more. Hosts files are also supported. uBO uses the EasyList filter syntax and [extends][Extended Syntax] the syntax to work with custom rules and filters.
 
 You may easily unselect any preselected filter lists if you think uBO blocks too much. For reference, Adblock Plus installs with only EasyList, ABP filters, and Acceptable Ads enabled by default.
 
-It is important to note that using a blocker is **NOT** [theft]. Do not fall for this creepy idea. The _ultimate_ logical consequence of `blocking = theft` is the criminalization of the inalienable right to privacy.
+It is important to note that using a blocker is **NOT** [theft][theft]. Do not fall for this creepy idea. The _ultimate_ logical consequence of `blocking = theft` is the criminalization of the inalienable right to privacy.
 
 Ads, "unintrusive" or not, are just the visible portion of the privacy-invading means entering your browser when you visit most sites. **uBO's primary goal is to help users neutralize these privacy-invading methods** in a way that welcomes those users who do not wish to use more technical means.
 
-***
+---
 
 * [Documentation](#documentation)
 * [Installation](#installation)
@@ -123,6 +123,24 @@ Do **NOT** use uBO with any other content blocker. uBO [performs][Performance] a
 
 [Deploying uBO][Deployment]
 
+## Comparison: uBlock Origin vs uBlock Origin Lite vs DNS Blockers
+
+| **Feature**                               | **Explanation**                                                                                                                                                                                                                                            | **uBlock Origin**                      | **uBlock Origin Lite**                     | **DNS Blockers**                      |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- | ------------------------------------------------ | ------------------------------------------- |
+| **Domain Blocking**                       | Blocks entire domains like `ads.example.com`                                                                                                                                                                                                                   | ✅                                           | ✅                                               | ✅                                          |
+| **Element Hiding (Cosmetic Filtering)**   | Hides visual elements like banners, popups, cookie prompts                                                                                                                                                                                                       | ✅ Full (dynamic + static)                   | ✅ Static only                                   | ❌                                          |
+| **Scriptlet Injection**                   | Injects JS snippets to disable popups, overlays, anti-adblockers                                                                                                                                                                                                 | ✅ Extensive                                 | ✅ Limited                                       | ❌                                          |
+| **URL-Based Filtering**                   | Blocks specific URLs (e.g.,`example.com/ads.js`) instead of entire domains                                                                                                                                                                                     | ✅                                           | ✅                                               | ❌                                          |
+| **Dynamic Filtering / 3rd-party Control** | Per-site control over scripts and third-party requests                                                                                                                                                                                                           | ✅                                           | ❌                                               | ❌                                          |
+| **Custom Filter Lists**                   | Supports lists like EasyList, AdGuard, uBO filters, etc.                                                                                                                                                                                                         | ✅ Full support                              | ✅ Limited via MV3 rules                         | ✅ Some (depends on service)                |
+| **Per-tab Filtering**                     | Rules apply to each browser tab separately                                                                                                                                                                                                                       | ✅                                           | ✅                                               | ❌                                          |
+| **Block Inline Scripts / WebSockets**     | Blocks inline JavaScript and WebSocket connections –<br />Prevents execution of scripts embedded directly in the webpage’s HTML (inline scripts) and<br /> blocks persistent real-time connections (WebSockets) often used for tracking, ads, or live updates. | ✅                                           | ❌                                               | ❌                                          |
+| **Works Outside Browser**                 | Blocks traffic from all apps/devices on the network                                                                                                                                                                                                              | ❌                                           | ❌                                               | ✅                                          |
+| **Requires Browser Permissions**          | Needs access to modify and read all site content                                                                                                                                                                                                                 | ✅                                           | ❌ (no permissions required)                     | ❌                                          |
+| **Browser Availability**                  | Where each tool is available and maintained                                                                                                                                                                                                                      | ✅ Firefox & Chromium (actively maintained) | ✅ Chromium only (Firefox version discontinued) | ✅ Works system-wide (browser-independent) |
+
+> ✅ = Supported  ❌ = Not Supported
+
 ## Release History
 
 [Releases Page][Releases]
@@ -143,8 +161,11 @@ Free. Open-source. For users by users. No donations sought.
 
 If you ever want to contribute something, think about the people working hard to maintain the filter lists you are using, which are available to use by all for free.
 
-
 <!----------------------------------------------------------------------------->
+
+<!---------------------------------[ Internal ]-------------------------------->
+
+<!----------------------------------[ Badges ]--------------------------------->
 
 [Peter Lowe's Blocklist]: https://pgl.yoyo.org/adservers/
 [Malicious Blocklist]: https://gitlab.com/malware-filter/urlhaus-filter#malicious-url-blocklist
@@ -161,14 +182,9 @@ If you ever want to contribute something, think about the people working hard to
 [Opera]: https://addons.opera.com/extensions/details/ublock/
 [Edge]: https://microsoftedge.microsoft.com/addons/detail/ublock-origin/odfafepnkmbhccpbejgmiehpchacaeak
 [NPM]: https://www.npmjs.com/package/@gorhill/ubo-core
-
 [Manifesto]: MANIFESTO.md
 [License]: LICENSE.txt
-
 [Nicole Rolls]: https://github.com/nicole-ashley
-
-<!---------------------------------[ Internal ]-------------------------------->
-
 [Manual Installation]: https://github.com/gorhill/uBlock/tree/master/dist#install
 [Extended Syntax]: https://github.com/gorhill/uBlock/wiki/Static-filter-syntax#extended-syntax
 [Privacy Policy]: https://github.com/gorhill/uBlock/wiki/Privacy-policy
@@ -182,9 +198,6 @@ If you ever want to contribute something, think about the people working hard to
 [Issues]: https://github.com/uBlockOrigin/uBlock-issues/issues
 [Beta]: https://github.com/gorhill/uBlock/blob/master/dist/README.md#for-beta-version
 [Wiki]: https://github.com/gorhill/uBlock/wiki
-
-<!----------------------------------[ Badges ]--------------------------------->
-
 [Badge Localization]: https://d322cqt584bo4o.cloudfront.net/ublock/localized.svg
 [Badge Commits]: https://img.shields.io/github/commit-activity/m/gorhill/ublock?label=Commits
 [Badge Mozilla]: https://img.shields.io/amo/rating/ublock-origin?label=Firefox
